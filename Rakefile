@@ -1,0 +1,87 @@
+require 'rake/clean'
+require 'fileutils'
+require "rspec/core/rake_task"
+require 'rexml/document'
+
+
+Dir["./lib/tasks/*.rake"].each { |f| load f }
+
+JarVersion = File::open("pom.xml") do |f|
+  REXML::Document::new(f).elements["project/version"].text
+end
+PackageName  = "sipatra-#{JarVersion}"
+JarName      = "#{PackageName}.jar"
+JarFile      = "lib/sipatra/#{JarName}"
+GemFiles     = FileList["src/main/resources/**/*.rb"].to_a.map do |file|
+  file.gsub(%r{src/main/resources}, "lib")
+end + FileList["lib/sipatra/*"] + ["lib/sipatra.rb"]
+GemFiles << JarFile
+GemFiles << "lib/sipatra-jars.rb"
+
+puts "-" * 70
+puts "PackageName: #{PackageName}"
+puts "-" * 70
+
+begin
+  require 'jeweler'
+  Jeweler::Tasks.new do |gem|
+    gem.name = "sipatra"
+    gem.version = JarVersion.gsub(/-SNAPSHOT/, '')
+    gem.summary = %Q{DSL for easy writting of SIP Servlet applications}
+    gem.description = %Q{Sipatra is a Ruby DSL for easy writting of SIP Servlet applications}
+    gem.email = ["dominique.broeglin@gmail.com", "jean-baptiste.morin@nexcom.fr"]
+    gem.homepage = "http://confluence.cipango.org/display/DOC/Sipatra"
+    gem.authors = ["Dominique Broeglin", "Jean-Baptiste Morin"]
+    gem.add_development_dependency "rspec", ">= 1.2.9"
+    
+    gem.files = GemFiles
+    
+    # gem.add_development_dependency "yard", ">= 0"
+    # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
+  end
+  Jeweler::GemcutterTasks.new
+  
+  namespace :gemspec do
+    task :generate => GemFiles
+  end
+rescue LoadError
+  puts "Jeweler (or a dependency) not available. Install it with: gem install jeweler"
+end
+
+RSpec::Core::RakeTask.new(:spec)
+
+desc "Run all examples using rcov"
+RSpec::Core::RakeTask.new :rcov => :cleanup_rcov_files do |t|
+    t.rcov = true
+    t.rcov_opts =  %[-Ilib -Ispec --exclude "spec/*,gems/*" --text-report --sort coverage --aggregate coverage.data]
+  end
+  task :cleanup_rcov_files do
+  rm_rf 'coverage.data'
+end
+task :spec => :check_dependencies
+
+task :default => :spec
+
+task :clean do
+  rm_rf Dir["lib/sipatra", "lib/sipatra.rb", "VERSION", "sipatra.gemspec", "target"]
+end
+
+begin
+  require 'yard'
+  YARD::Rake::YardocTask.new
+rescue LoadError
+  task :yardoc do
+    abort "YARD is not available. In order to run yardoc, you must: sudo gem install yard"
+  end
+end
+
+rule %r{^lib/sipatra.*rb} => [ proc { |tn| tn.sub(/lib/, 'src/main/resources') } ] do |t|
+  mkdir_p "lib/sipatra"
+  cp t.source, t.name
+end
+
+file "lib/sipatra/#{JarName}" => ["lib/sipatra", "lib/sipatra.rb"] do
+  system "mvn -o package"
+  cp Dir["target/gem-dist/*"].delete_if {|n| n =~ /^jruby-complete/ }, "lib/sipatra"
+end
+
