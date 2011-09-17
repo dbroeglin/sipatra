@@ -99,20 +99,6 @@ module Sipatra
     end
     
     module HelperMethods  
-      def proxy(*args)
-        uri = args.shift
-        uri, options = nil, uri if uri.kind_of? Hash
-        options ||= args.shift || {}
-        if uri.nil?
-          uri = message.requestURI
-        else
-          uri = sip_factory.createURI(uri)
-        end
-        proxy = message.proxy
-        proxy.setRecordRoute(options[:record_route]) if options.has_key? :record_route
-        proxy.proxyTo(uri)
-      end    
-      
       def header
         @header_wrapper ||= HeadersWrapper::new(self)
       end
@@ -201,11 +187,12 @@ module Sipatra
       
       def convert_status_code(symbol_or_int)
         case symbol_or_int
-          when Integer: return symbol_or_int
-          when Symbol: 
-          code = STATUS_CODES_MAP[symbol_or_int]
-          raise ArgumentError, "Unknown status code symbol: '#{symbol_or_int}'" unless code
-          code
+          when Integer
+            return symbol_or_int
+          when Symbol
+            code = STATUS_CODES_MAP[symbol_or_int]
+            raise ArgumentError, "Unknown status code symbol: '#{symbol_or_int}'" unless code
+            code
         else
           raise ArgumentError, "Status code value should be a Symbol or Int not '#{symbol_or_int.class}'"
         end
