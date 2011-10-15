@@ -173,7 +173,7 @@ describe 'When', Sipatra::HelperMethods, 'is included; ', FakeApp do
       mock_response.should_receive(:addHeader).with('Test1', 'Value1')
       mock_response.should_receive(:send)
       
-      subject.send_response(500) do |response|
+      subject.send_response(500) do 
         response.addHeader('Test1', 'Value1')
       end
     end
@@ -192,7 +192,7 @@ describe 'When', Sipatra::HelperMethods, 'is included; ', FakeApp do
       mock_response.should_receive(:addHeader).with('Test2', 'Value2')
       mock_response.should_receive(:send)
       
-      subject.send_response 500, :Test1 => 'Value1' do |response|
+      subject.send_response 500, :Test1 => 'Value1' do 
         response.addHeader('Test2', 'Value2')
       end
     end
@@ -202,7 +202,7 @@ describe 'When', Sipatra::HelperMethods, 'is included; ', FakeApp do
       mock_response.should_receive(:addHeader).with('Test2', 'Value2')
       mock_response.should_receive(:send)
       
-      subject.send_response(500, 'Error') do |response|
+      subject.send_response(500, 'Error') do 
         response.addHeader('Test2', 'Value2')
       end      
     end

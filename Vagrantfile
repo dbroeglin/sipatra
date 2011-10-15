@@ -1,3 +1,5 @@
+cipango_home = ENV["CIPANGO_HOME"] || "../cipango-distribution-2.0.0"
+
 Vagrant::Config.run do |config|
   config.vm.box = "squeeze64"
   
@@ -11,7 +13,7 @@ Vagrant::Config.run do |config|
 
   config.vm.forward_port "http", 8080, 8080
 
-  config.vm.share_folder "cipango", "/cipango", "../cipango-distribution-2.0.0"
+  config.vm.share_folder "cipango", "/cipango", cipango_home 
 
   config.vm.provision :chef_solo do |chef|
     chef.cookbooks_path = "cookbooks"
