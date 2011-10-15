@@ -14,13 +14,11 @@ JarName      = "#{PackageName}.jar"
 JarFile      = "lib/sipatra/#{JarName}"
 GemFiles     = FileList["src/main/resources/**/*.rb"].to_a.map do |file|
   file.gsub(%r{src/main/resources}, "lib")
-end + FileList["lib/sipatra/*"] + ["lib/sipatra.rb"]
+end  
+GemFiles.concat FileList["lib/sipatra/*"] 
+GemFiles << "lib/sipatra.rb"
 GemFiles << JarFile
 GemFiles << "lib/sipatra-jars.rb"
-
-puts "-" * 70
-puts "PackageName: #{PackageName}"
-puts "-" * 70
 
 begin
   require 'jeweler'
@@ -32,8 +30,7 @@ begin
     gem.email = ["dominique.broeglin@gmail.com", "jean-baptiste.morin@nexcom.fr"]
     gem.homepage = "http://confluence.cipango.org/display/DOC/Sipatra"
     gem.authors = ["Dominique Broeglin", "Jean-Baptiste Morin"]
-    gem.add_development_dependency "rspec", ">= 1.2.9"
-    
+    gem.add_development_dependency "rspec", "~> 2.6"
     gem.files = GemFiles
     
     # gem.add_development_dependency "yard", ">= 0"
