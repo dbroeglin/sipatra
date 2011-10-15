@@ -19,18 +19,22 @@ def exec!(*commands)
     end
 end
 
-require 'vagrant'
-namespace :test do
-  namespace :cipango do
-    desc "Start Cipango test server"
-    task :start do
-        exec! "cd /cipango; PATH=/sbin:$PATH ./bin/jetty.sh start"
-    end
-
-    desc "Stop Cipango test server"
-    task :stop do
-        exec! "cd /cipango; ./bin/jetty.sh stop"
+begin
+  require 'vagrant'
+  namespace :test do
+    namespace :cipango do
+      desc "Start Cipango test server"
+      task :start do
+          exec! "cd /cipango; PATH=/sbin:$PATH ./bin/jetty.sh start"
+      end
+  
+      desc "Stop Cipango test server"
+      task :stop do
+          exec! "cd /cipango; ./bin/jetty.sh stop"
+      end
     end
   end
+rescue LoadError
+  puts "WARNING: Vagrant is not available. In order to run vagrant tasks, you must: gem install vagrant"
 end
 
