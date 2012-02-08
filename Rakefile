@@ -6,7 +6,7 @@ require "bundler/gem_tasks"
 
 Dir["./lib/tasks/*.rake"].each { |f| load f }
 
-RSpec::Core::RakeTask.new(:spec)
+RSpec::Core::RakeTask.new(:rspec)
 
 desc "Run all examples using rcov"
 RSpec::Core::RakeTask.new :rcov => :cleanup_rcov_files do |t|
@@ -43,7 +43,7 @@ sipatra_jar_fullname   = "lib/sipatra/#{sipatra_jar_name}"
 file sipatra_jar_fullname => "target/gem-dist/#{sipatra_jar_name}" do
   mkdir_p "lib/sipatra"
   cp_r Dir["src/main/resources/sipatra*"], "lib"
-  cp Dir["target/gem-dist/*"].delete_if {|n| n =~ /^jruby-complete/ }, "lib/sipatra"
+  cp Dir["target/gem-dist/*"].delete_if {|n| n =~ /jruby-complete/ }, "lib/sipatra"
 end
 
 file "target/gem-dist/#{sipatra_jar_name}" => FileList["src/main/**/*"] do

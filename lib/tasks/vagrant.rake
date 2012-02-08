@@ -25,12 +25,12 @@ begin
     namespace :cipango do
       desc "Start Cipango test server"
       task :start do
-          exec! "cd /cipango; PATH=/sbin:$PATH ./bin/jetty.sh start"
+          exec! "cd /cipango; PATH=/sbin:$PATH bin/jetty.sh start"
       end
   
       desc "Stop Cipango test server"
       task :stop do
-          exec! "cd /cipango; ./bin/jetty.sh stop"
+          exec! "cd /cipango; bin/jetty.sh stop"
       end
     end
   end

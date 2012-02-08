@@ -2,16 +2,14 @@ cipango_home = ENV["CIPANGO_HOME"] || "../cipango-distribution-2.0.0"
 
 Vagrant::Config.run do |config|
   config.vm.box = "squeeze64"
-  
-  config.vm.customize do |vm| 
-    vm.memory_size = 512
-  end
+ 
+  config.vm.customize ["modifyvm", :id, "--memory", "512"]
 
   # config.vm.boot_mode = :gui
 
   # config.vm.network "33.33.33.10"
 
-  config.vm.forward_port "http", 8080, 8080
+  config.vm.forward_port 8080, 8080
 
   config.vm.share_folder "cipango", "/cipango", cipango_home 
 
