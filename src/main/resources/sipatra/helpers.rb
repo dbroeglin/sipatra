@@ -1,68 +1,68 @@
 module Sipatra
   STATUS_CODES_MAP = {
-    :accepted => 202,
-    :address_incomplete => 484,
-    :alternative_service => 380,
-    :ambiguous => 485,
-    :bad_event => 489,
-    :bad_extension => 420,
-    :bad_gateway => 502,
-    :bad_identity_info => 436,
-    :bad_request => 400,
-    :busy_everywhere => 600,
-    :busy_here => 486,
-    :call_being_forwarded => 181,
-    :call_leg_done => 481,
-    :call_queued => 182,
-    :conditional_request_failed => 412,
-    :decline => 603,
-    :does_not_exit_anywhere => 604,
-    :extension_required => 421,
-    :forbidden => 403,
-    :gone => 410,
-    :interval_too_brief => 423,
-    :invalid_identity_header => 438,
-    :loop_detected => 482,
-    :message_too_large => 513,
-    :method_not_allowed => 405,
-    :moved_permanently => 301,
-    :moved_temporarily => 302,
-    :multiple_choices => 300,
-    :not_acceptable => 406,
-    :not_acceptable_anywhere => 606,
-    :not_acceptable_here => 488, 
-    :not_found => 404,
-    :not_implemented => 501,
-    :ok => 200,
-    :payment_required => 402,
-    :precondition_failure => 580,
-    :provide_referer_identity => 429,
+    :accepted                      => 202,
+    :address_incomplete            => 484,
+    :alternative_service           => 380,
+    :ambiguous                     => 485,
+    :bad_event                     => 489,
+    :bad_extension                 => 420,
+    :bad_gateway                   => 502,
+    :bad_identity_info             => 436,
+    :bad_request                   => 400,
+    :busy_everywhere               => 600,
+    :busy_here                     => 486,
+    :call_being_forwarded          => 181,
+    :call_leg_done                 => 481,
+    :call_queued                   => 182,
+    :conditional_request_failed    => 412,
+    :decline                       => 603,
+    :does_not_exit_anywhere        => 604,
+    :extension_required            => 421,
+    :forbidden                     => 403,
+    :gone                          => 410,
+    :interval_too_brief            => 423,
+    :invalid_identity_header       => 438,
+    :loop_detected                 => 482,
+    :message_too_large             => 513,
+    :method_not_allowed            => 405,
+    :moved_permanently             => 301,
+    :moved_temporarily             => 302,
+    :multiple_choices              => 300,
+    :not_acceptable                => 406,
+    :not_acceptable_anywhere       => 606,
+    :not_acceptable_here           => 488,
+    :not_found                     => 404,
+    :not_implemented               => 501,
+    :ok                            => 200,
+    :payment_required              => 402,
+    :precondition_failure          => 580,
+    :provide_referer_identity      => 429,
     :proxy_authentication_required => 407,
-    :request_entity_too_large => 413,
-    :request_pending => 491,
-    :request_terminated => 487,
-    :request_timeout => 408,
-    :request_uri_too_long => 414,
-    :ringing => 180,
-    :security_agreement_required => 494,
-    :server_internal_error => 500,
-    :server_timeout => 504,
-    :service_unavailable => 503,
-    :session_interval_too_small => 422,
-    :session_progress => 183,
-    :temporarily_unavailable => 480,
-    :too_many_hops => 483,
-    :trying => 100,
-    :unauthorized => 401,
-    :undecipherable => 493,
-    :unsupported_certificate => 437,
-    :unsupported_media_type => 415,
-    :unsupported_uri_scheme => 416,
-    :use_identity_header => 428,
-    :use_proxy => 305,
-    :version_not_supported => 505,
+    :request_entity_too_large      => 413,
+    :request_pending               => 491,
+    :request_terminated            => 487,
+    :request_timeout               => 408,
+    :request_uri_too_long          => 414,
+    :ringing                       => 180,
+    :security_agreement_required   => 494,
+    :server_internal_error         => 500,
+    :server_timeout                => 504,
+    :service_unavailable           => 503,
+    :session_interval_too_small    => 422,
+    :session_progress              => 183,
+    :temporarily_unavailable       => 480,
+    :too_many_hops                 => 483,
+    :trying                        => 100,
+    :unauthorized                  => 401,
+    :undecipherable                => 493,
+    :unsupported_certificate       => 437,
+    :unsupported_media_type        => 415,
+    :unsupported_uri_scheme        => 416,
+    :use_identity_header           => 428,
+    :use_proxy                     => 305,
+    :version_not_supported         => 505,
   }
-  
+
   class HeadersWrapper
     def initialize(app, plural = false, address = false)
       @app = app
@@ -77,11 +77,11 @@ module Sipatra
             name = name.to_s
             @app.message.removeHeader(name)
             if !values.nil?
-              values.each do |value| 
+              values.each do |value|
                 @app.message.add#{address ? "Address" : ""}Header(name, value#{address ? ", true" : ".to_s"})
               end
             end
-          end 
+          end
         RUBY
       else
         method_definitions += <<-RUBY
@@ -91,14 +91,14 @@ module Sipatra
             else
               @app.message.removeHeader(name.to_s)
             end
-          end 
+          end
         RUBY
       end
       class << self; self; end.class_eval method_definitions
-      end 
+      end
     end
-    
-    module HelperMethods  
+
+    module HelperMethods
       def proxy(*args)
         uri = args.shift
         uri, options = nil, uri if uri.kind_of? Hash
@@ -111,36 +111,36 @@ module Sipatra
         proxy = message.proxy
         proxy.setRecordRoute(options[:record_route]) if options.has_key? :record_route
         proxy.proxyTo(uri)
-      end    
-      
+      end
+
       def header
         @header_wrapper ||= HeadersWrapper::new(self)
       end
-      
+
       def headers
         @headers_wrapper ||= HeadersWrapper::new(self, true)
       end
-      
+
       def address_header
         @address_header_wrapper ||= HeadersWrapper::new(self, false, true)
       end
-      
+
       def address_headers
         @address_headers_wrapper ||= HeadersWrapper::new(self, true, true)
       end
-      
+
       def add_header(name, value)
         message.addHeader(name.to_s, value)
       end
-      
+
       def add_address_header(name, value, first = true)
         message.addAddressHeader(name.to_s, value, first)
       end
-      
+
       def header?(name)
         !message.getHeader(name.to_s).nil?
       end
-      
+
       def modify_header(header_name, pattern = nil, new_value = nil)
         #FIXME: "JAVA" Code
         if pattern
@@ -154,14 +154,14 @@ module Sipatra
           end
         end
       end
-      
+
       def remove_header(name)
         message.removeHeader(name.to_s)
       end
-     
+
       class ResponseEnvironment
         instance_methods.each do |m|
-          undef_method m unless m.to_s =~ /^__|respond_to?|instance_eval/ 
+          undef_method m unless m.to_s =~ /^__|respond_to?|instance_eval/
         end
 
         attr_reader :response, :app
@@ -184,21 +184,21 @@ module Sipatra
             response.addHeader(name.to_s, value.to_s)
           end
         end
-        unless block.nil? 
+        unless block.nil?
           ResponseEnvironment::new(self, response).instance_eval(&block)
         end
         response.send
       end
-      
+
       def create_address(addr, options = {})
         addr = addr.to_s # TODO: Handle URI instances
         address = sip_factory.createAddress(addr)
         address.setExpires(options[:expires]) if options.has_key? :expires
         address.setDisplayName(options[:display_name]) if options.has_key? :display_name
-        
-        address      
+
+        address
       end
-      
+
       def create_uri(value, params = {})
         uri = sip_factory.createURI(value)
         if uri.respond_to? :setLrParam
@@ -210,14 +210,15 @@ module Sipatra
 
       def push_route(route)
         message.pushRoute(sip_factory.createAddress(route))
-      end    
-      
+      end
+
       private
-      
+
       def convert_status_code(symbol_or_int)
         case symbol_or_int
-          when Integer: return symbol_or_int
-          when Symbol: 
+          when Integer
+            return symbol_or_int
+          when Symbol
           code = STATUS_CODES_MAP[symbol_or_int]
           raise ArgumentError, "Unknown status code symbol: '#{symbol_or_int}'" unless code
           code
