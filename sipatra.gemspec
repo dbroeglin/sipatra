@@ -40,5 +40,5 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
   s.add_development_dependency "rspec", "~> 2.6"
-  s.add_development_dependency "vagrant", "~> 0.9.6"
+  s.add_development_dependency "vagrant", "~> 1.0.2"
 end
