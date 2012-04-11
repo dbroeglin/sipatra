@@ -43,6 +43,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  rspec (~> 2.6)
+  rspec (~> 2.9.0)
   sipatra!
   vagrant (~> 1.0.2)
