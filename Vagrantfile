@@ -23,5 +23,6 @@ Vagrant::Config.run do |config|
         :install_flavor => "sun"
       } 
     )
+    chef.add_recipe "jruby"
   end
 end
