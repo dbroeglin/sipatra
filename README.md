@@ -5,7 +5,9 @@ Sipatra
 What?
 -----
 
-Sipatra is a simple Sinatra like Ruby DSL for SIP Servlets. It's heavily inspired from Sinatra and was adapted only in those areas that were required by differences between the HTTP and SIP protocols. Sipatra is written is JRuby and targets SIP Servlet 1.1 compatible application servers
+Sipatra is a simple Sinatra like Ruby DSL for SIP Servlets. It's heavily inspired from Sinatra and
+was adapted only in those areas that were required by differences between the HTTP and SIP
+protocols. Sipatra is written is JRuby and targets SIP Servlet 1.1 compatible application servers
 
 http://confluence.cipango.org/display/DOC/Sipatra
 
@@ -22,9 +24,12 @@ As a prerequisite you will need to have VirtualBox and Maven installed on your s
     vagrant box add squeeze64 http://dl.dropbox.com/u/937870/VMs/squeeze64.box
 
     rake test:cipango:setup
-    vagrant up
+    rake test:cipango:start # will do a vagrant up
     rake test:cipango:deploy
-    rake test:cipango:start
+
+    # Tip: Use a jruby VM when executing the specs but when doing only vagrant and deployment stuff
+    # you can work with a standard MRI (1.8 or 1.9). For instance I use two gemsets: 1.9.3@vagrant 
+    # and jruby-1.6.7@sipatra
 
 Connect to the box and launch a simple sipp UAS:
 

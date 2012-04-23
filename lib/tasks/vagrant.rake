@@ -4,7 +4,7 @@ begin
   namespace :test do
     namespace :cipango do
       def exec!(command)
-        command = command.join("; \\\n") if command.respond_to? :each
+        command = command.join("; \\\n") if command.kind_of? Array
         @vagrant_env.primary_vm.channel.execute command do |type, data|
           puts "#{type == :stdout ? "\e[32m" : "\e[33m"}#{data}\e[0m"
         end

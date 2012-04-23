@@ -47,7 +47,7 @@ file sipatra_jar_fullname => "target/gem-dist/#{sipatra_jar_name}" do
 end
 
 file "target/gem-dist/#{sipatra_jar_name}" => FileList["src/main/**/*"] do
-  system "mvn -o package"
+  system "mvn package"
 end
 
 task :build => sipatra_jar_fullname 
