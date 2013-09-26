@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    sipatra (0.0.4)
+    sipatra (0.1.1)
 
 GEM
   remote: http://rubygems.org/
