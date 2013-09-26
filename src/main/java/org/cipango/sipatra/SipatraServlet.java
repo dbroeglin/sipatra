@@ -36,6 +36,9 @@ public class SipatraServlet extends SipServlet
 	@Override
 	public void doRequest(SipServletRequest request) throws IOException
 	{
+    if(request.getMethod().equals("INVITE")) {
+      request.createResponse(100).send();
+    }
 		invokeMethod(request, "do_request");
 	}
 
